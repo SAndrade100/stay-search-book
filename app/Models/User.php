@@ -20,14 +20,14 @@ class User extends Authenticatable
 
     public const MAX_API_TOKENS = 5;
 
-    public function issueApiToken(): string 
+    public function issueApiToken(): string
     {
-        $plaintext = $this->createToken('api')->plainTextToken;
+        $plainText = $this->createToken('api')->plainTextToken;
 
         $staleIds = $this->tokens()->latest('id')->offset(self::MAX_API_TOKENS)->limit(PHP_INT_MAX)->pluck('id');
         $this->tokens()->whereKey($staleIds)->delete();
 
-        return $plaintext;
+        return $plainText;
     }
 
     public function books(): HasMany 
