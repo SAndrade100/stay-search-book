@@ -23,8 +23,11 @@ class UpdateBookRequest extends FormRequest
      */
     public function rules(): array
     {
+        $partial = $this->isMethod('PATCH');
+        $presence = $partial ? 'sometimes' : 'present';
+
         return [
-            'name' => array_filter([$partial ? 'sometimes' : null, 'required', 'string', 'max:255']),
+            'name' => [$presence, 'required', 'string', 'max:255'],
             'isbn' => [
                 $presence,
                 'nullable',

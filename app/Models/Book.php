@@ -26,7 +26,7 @@ class Book extends Model
     {
         $escaped = str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $term);
 
-        $query->whereRaw($this->qualifyColumn('name')." like ? escape '!'", ["%{$escaped}"]);
+        $query->whereRaw($this->qualifyColumn('name')." like ? escape '!'", ["%{$escaped}%"]);
     }
 
     public function user(): BelongsTo

@@ -34,7 +34,7 @@ class BookController
             ? $query->cursorPaginate($perPage)->withQueryString()
             : $query->paginate($perPage)->withQueryString();
         
-            return BookResource::colection($books);
+        return BookResource::collection($books);
     }
 
     /**

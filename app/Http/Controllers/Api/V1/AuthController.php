@@ -25,7 +25,7 @@ class AuthController
         $user = User::where('email', $request->validated('email'))->first();
         $passwordMatches = Hash::check($request->validated('password'), $user->password ?? self::dummyHash());
 
-        if (! $user || $passwordMatches) {
+        if (! $user || ! $passwordMatches) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
