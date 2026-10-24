@@ -37,11 +37,11 @@ class StoreBookRequest extends FormRequest
     /**
      * @return array<string, string>
      */
-    public function messages(): array 
+    public function messages(): array
     {
         return [
             'isbn.regex' => 'The isbn must contain digits only (10 or 13 digits).',
-            'isbn.unique' => 'You already have a book with this isbn.'
+            'isbn.unique' => 'You already have a book with this isbn.',
         ];
     }
 }

@@ -1,0 +1,119 @@
+# Executable API examples for the "REST Client" VS Code extension (humao.rest-client).
+
+@host = http://127.0.0.1:8000/api/v1
+@json = application/json
+
+### Register a new user (returns a token too)
+# @name register
+POST {{host}}/register
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "password": "secret-password"
+}
+
+### Log in with the seeded demo user
+# @name login
+POST {{host}}/login
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+
+###
+@token = {{login.response.body.$.data.token}}
+
+### List my books (offset pagination, default order: newest first)
+GET {{host}}/books
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### Search, sort and choose the page size
+GET {{host}}/books?search=a&sort=value&direction=asc&per_page=5
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### Cursor pagination: follow links.next from the response for the following page
+GET {{host}}/books?pagination=cursor&per_page=2
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### Create a book (only "name" is required)
+# @name createBook
+POST {{host}}/books
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "name": "Clean Code",
+  "isbn": "9780132350884",
+  "value": 49.90
+}
+
+###
+@bookId = {{createBook.response.body.$.data.id}}
+
+### Show it
+GET {{host}}/books/{{bookId}}
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### PATCH: partial update, only the fields sent change
+PATCH {{host}}/books/{{bookId}}
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "value": 39.90
+}
+
+### PUT: full replacement, every field must be present (null clears isbn/value)
+PUT {{host}}/books/{{bookId}}
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "name": "Clean Code, 2nd printing",
+  "isbn": "9780132350884",
+  "value": null
+}
+
+### Delete it
+DELETE {{host}}/books/{{bookId}}
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### Log out (revokes only this token)
+POST {{host}}/logout
+Authorization: Bearer {{token}}
+Accept: {{json}}
+
+### ---- Error cases ----
+
+### 422: isbn must be 10 or 13 digits
+POST {{host}}/books
+Authorization: Bearer {{token}}
+Content-Type: {{json}}
+Accept: {{json}}
+
+{
+  "name": "Bad isbn",
+  "isbn": "not-digits"
+}
+
+### 401: no token (still JSON, even without an Accept header)
+GET {{host}}/books
+
+### 404: a book that is not yours looks exactly like one that does not exist
+GET {{host}}/books/999999
+Authorization: Bearer {{token}}
+Accept: {{json}}

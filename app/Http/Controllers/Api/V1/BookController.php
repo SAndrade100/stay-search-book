@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\IndexBookRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Database\UniqueConstraintViolationException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\ValidationException;
 
@@ -25,15 +23,15 @@ class BookController
 
         $query = $request->user()->books()
             ->when($filters['search'] ?? null, fn ($query, $search) => $query->nameContains($search))
-                ->orderBy($filters['sort'] ?? 'created_at', $direction)
-                ->orderBy('id', $direction);
-        
+            ->orderBy($filters['sort'] ?? 'created_at', $direction)
+            ->orderBy('id', $direction);
+
         $perPage = $filters['per_page'] ?? 15;
 
         $books = ($filters['pagination'] ?? 'page') === 'cursor'
             ? $query->cursorPaginate($perPage)->withQueryString()
             : $query->paginate($perPage)->withQueryString();
-        
+
         return BookResource::collection($books);
     }
 

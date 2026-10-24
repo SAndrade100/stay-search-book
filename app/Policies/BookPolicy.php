@@ -32,9 +32,9 @@ class BookPolicy
         return $this->owns($user, $book);
     }
 
-    private function owns(User $user, Book $book): Response 
+    private function owns(User $user, Book $book): Response
     {
-        return $user->id === $book->user_id 
+        return $user->id === $book->user_id
             ? Response::allow()
             : Response::denyAsNotFound(); // 404 instead of 403, so the API does not reveal which book ids exists
     }

@@ -28,7 +28,7 @@ class BookTest extends TestCase
     public function test_index_only_lists_the_authenticated_users_books(): void
     {
         Book::factory(3)->for($this->user)->create();
-        Book::factory(2)->create(); 
+        Book::factory(2)->create();
 
         $this->getJson('/api/v1/books')
             ->assertOk()

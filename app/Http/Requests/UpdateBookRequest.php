@@ -40,7 +40,7 @@ class UpdateBookRequest extends FormRequest
         ];
     }
 
-    public function messages(): array 
+    public function messages(): array
     {
         return [
             'isbn.regex' => 'The isbn must contain digits only (10 or 13 digits).',

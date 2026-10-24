@@ -16,7 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     public const MAX_API_TOKENS = 5;
 
@@ -30,7 +30,7 @@ class User extends Authenticatable
         return $plainText;
     }
 
-    public function books(): HasMany 
+    public function books(): HasMany
     {
         return $this->hasmany(Book::class);
     }
